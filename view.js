@@ -2,6 +2,7 @@ const ViewEvent = function(selector, options) {
   let _target;
   let _options = {
     offset: 0,
+    test: false,
     callback: function(t) {
       console.log('処理が設定されていません。');
     }
@@ -31,6 +32,19 @@ const ViewEvent = function(selector, options) {
       break;
     default:
       Error('オプションが異常です。');
+  }
+
+  // テスト用ライン
+  if (_options.test) {
+    var el = document.createElement('div');
+    el.style.position = 'fixed';
+    el.style.width = '100%';
+    el.style.height = '1px';
+    el.style.backgroundColor = 'black';
+    el.style.top = (100 - parseInt(_options.offset.replace('%', ''))) + '%';
+    el.style.lett = '0';
+    el.style.zIndex = '99999999';
+    document.body.appendChild(el);
   }
 
   // 実行
@@ -79,7 +93,8 @@ const ViewEvent = function(selector, options) {
       if (isSuccess) {
         return false;
       }
-      on();
+
+      on();  
     });
 
     function on() {
@@ -88,6 +103,15 @@ const ViewEvent = function(selector, options) {
         _options.callback(_target);
         isSuccess = true;
       }
+
+      // 最後まで行った場合、まだイベントが起きていなかったらうごかす
+      if (document.body.clientHeight - window.innerHeight < window.pageYOffset) {
+        console.log(document.body.clientHeight - window.innerHeight, window.pageYOffset)
+        if (!isSuccess) {
+          _options.callback(_target);
+          isSuccess = true;
+        }
+      }    
     }
   }
 }

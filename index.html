@@ -9,6 +9,12 @@
       section {
         margin: 50px;
         padding: 50px;
+        transition: 0.3s;
+      }
+
+      section.active {
+        background-color: #444;
+        color: white;
       }
     </style>
   </head>
@@ -86,7 +92,8 @@
     <script src="view.js"></script>
     <script>
       ViewEvent('section', {
-        offset: '50%',
+        offset: '40%',
+        test: true,
         callback: function(target) {
           target.className += ' active';
         }
