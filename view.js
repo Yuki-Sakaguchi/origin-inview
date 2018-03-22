@@ -2,7 +2,7 @@ const ViewEvent = function(selector, options) {
   let _target;
   let _options = {
     offset: 0,
-    test: false,
+    test: '',
     callback: function(t) {
       console.log('処理が設定されていません。');
     }
@@ -40,7 +40,7 @@ const ViewEvent = function(selector, options) {
     el.style.position = 'fixed';
     el.style.width = '100%';
     el.style.height = '1px';
-    el.style.backgroundColor = 'black';
+    el.style.backgroundColor = _options.test;
     el.style.top = (100 - parseInt(_options.offset.replace('%', ''))) + '%';
     el.style.lett = '0';
     el.style.zIndex = '99999999';
@@ -48,9 +48,11 @@ const ViewEvent = function(selector, options) {
   }
 
   // 実行
-  for (var i = 0; i < _target.length; i++) {
-    execute(_target[i]);
-  }
+  window.addEventListener('load', function() {
+    for (var i = 0; i < _target.length; i++) {
+      execute(_target[i]);
+    }
+  });
 
   function execute(_target) {
     var isSuccess = false;
@@ -75,17 +77,14 @@ const ViewEvent = function(selector, options) {
 
     function setOnPoition() {
       if (_options.offset.indexOf('%') != -1) {
-        console.log(window.innerHeight);
 
         var par = parseInt(_options.offset.replace('%', ''));
-        console.log(par);
 
         var offset = window.innerHeight * (par / 100);
-        console.log(offset);
 
-        onPosition = _target.getBoundingClientRect().top - window.innerHeight + offset;
+        onPosition = _target.getBoundingClientRect().top - window.innerHeight + offset + window.pageYOffset;
       } else {
-        onPosition = _target.getBoundingClientRect().top - window.innerHeight;
+        onPosition = _target.getBoundingClientRect().top - window.innerHeight + window.pageYOffset;
       }
     }
 
@@ -93,7 +92,6 @@ const ViewEvent = function(selector, options) {
       if (isSuccess) {
         return false;
       }
-
       on();  
     });
 
