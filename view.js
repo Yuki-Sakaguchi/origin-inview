@@ -41,7 +41,15 @@ const ViewEvent = function(selector, options) {
     el.style.width = '100%';
     el.style.height = '1px';
     el.style.backgroundColor = _options.test;
-    el.style.top = (100 - parseInt(_options.offset.replace('%', ''))) + '%';
+
+    if (_options.offset.indexOf('%') != -1) {
+      el.style.top = (100 - parseInt(_options.offset.replace('%', ''))) + '%';
+    } else if (_options.offset.indexOf('px') != -1) {
+      el.style.bottom = _options.offset;
+    } else {
+      el.style.bottom = _options.offset + 'px';
+    }
+
     el.style.lett = '0';
     el.style.zIndex = '99999999';
     document.body.appendChild(el);
@@ -83,8 +91,12 @@ const ViewEvent = function(selector, options) {
         var offset = window.innerHeight * (par / 100);
 
         onPosition = _target.getBoundingClientRect().top - window.innerHeight + offset + window.pageYOffset;
+
+      } else if (_options.offset.indexOf('px') != -1) {
+        onPosition = _target.getBoundingClientRect().top - window.innerHeight + window.pageYOffset + parseInt( _options.offset.replace('px', ''));
+
       } else {
-        onPosition = _target.getBoundingClientRect().top - window.innerHeight + window.pageYOffset;
+        onPosition = _target.getBoundingClientRect().top - window.innerHeight + window.pageYOffset + parseInt(_options.offset);
       }
     }
 
